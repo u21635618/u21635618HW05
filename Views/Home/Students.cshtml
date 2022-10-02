@@ -1,0 +1,108 @@
+﻿
+@model u21635618HW05.Models.StudentVM
+
+<h2>Students</h2>
+<hr />
+@using (Html.BeginForm("StudentSearch", "Home", FormMethod.Post, new { @class = "form-inline" }))
+{
+
+    <form class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search Student Name" name="name" style="width:250px;" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="_class" style="width:250px;">
+                <option value="none">Select a Class</option>
+                @foreach (var opt in Model. Options)
+                {
+                    <option value="@opt.Name">@opt.Name</option>
+                }
+            </select>
+        </div>
+
+        <select class="form-control" name="bookId" style="display:none;">
+            <option value="@Model.Book.ID">Select a Class</option>
+
+        </select>
+
+
+
+        <div class="form-group">
+            <input type="submit" value="Search" style="width:250px" class="btn btn-success form-control" />
+        </div>
+
+
+        <div class="form-group">
+            @Html.ActionLink("Clear", "Students", "Home", new { bookId = Model.Book.ID }, new { @class = "btn btn-danger form-control", @style = "width:250px;" })
+        </div>
+
+
+    </form>
+}
+<br />
+<table class="table">
+    <tr>
+        <th>
+            #
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Surname
+        </th>
+        <th>
+            Class
+        </th>
+        <th>
+            Points
+        </th>
+
+        @if (Model.Students.Where(x => x.Book == true).Count() >= 1)
+        {
+            <th>Return Book</th>
+        }
+        else
+        {
+            <th>Borrow Book</th>
+        }
+
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Students)
+    {
+        <tr>
+            <td>
+                @item.Id
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Class)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Points)
+            </td>
+
+            <td>
+                @if (item.Book == true)
+                {
+                    @Html.ActionLink("Return book", "ReturnBook", new { studentId = item.Id, bookId = Model.Book.ID }, new { @class = "btn btn-info form-control", @style = "width:150px" })
+
+                }
+                @if (item.Book == false && Model.Students.Where(x => x.Book == true).Count() == 0)
+                {
+                    @Html.ActionLink("Borrow Book", "BorrowBook", new { studentId = item.Id, bookId = Model.Book.ID }, new { @class = "btn btn-info form-control", @style = "width:150px" })
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>
